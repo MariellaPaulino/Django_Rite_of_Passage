@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.db import models
 
 class Poll(models.Model):
+
 	def __unicode__(self):
 		return self.question
 	def was_published_recently(self):
@@ -15,12 +16,16 @@ class Poll(models.Model):
 	pub_date = models.DateTimeField('date published')
 
 	def test_was_published_recently_with_old_poll(self):
-	old_poll = Poll(pub_date=timezone.now() - datetime.timedelta(days=30))
-	self.assertEqual(old_poll.was_published_recently(), False)
+		old_poll = Poll(pub_date=timezone.now() - datetime.timedelta(days=30))
+		self.assertEqual(old_poll.was_published_recently(), False)
 
 	def test_was_published_recently_with_recent_poll(self):
-	recent_poll = Poll(pub_date=timezone.now() - datetime.timedelta(hours=1))
-	self.assertEqual(recent_poll.was_published_recently(), True)
+		"""
+		was_published_recently() should return True for polls whose pub_date
+		is within the last day
+		"""
+		recent_poll = Poll(pub_date=timezone.now() - datetime.timedelta(hours=1))
+		self.assertEqual(recent_poll.was_published_recently(), True)
 
 class Choice(models.Model):
 	def __unicode__(self):  
